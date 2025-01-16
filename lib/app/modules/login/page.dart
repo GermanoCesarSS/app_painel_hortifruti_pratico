@@ -9,64 +9,86 @@ class LoginPage extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('LoginPage')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Painel do Hortifruti Prático'),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: controller.emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
-                validator: (String? value) {
-                  if (value != null && value.isEmpty) {
-                    return 'Informe o seu email';
-                  } else if (!value!.isEmail) {
-                    return 'Informe um email válido';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: controller.passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Senha',
-                ),
-                obscureText: true,
-                validator: (String? value) {
-                  if (value != null && value.isEmpty) {
-                    return 'Informe a senha';
-                  }
-                  return null;
-                },
-              ),
-              Row(
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500.0),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
                 children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: ElevatedButton(
-                        onPressed: controller.login,
-                        child: const Text('Entrar'),
+                  Text(
+                    'Login',
+                    style: Get.textTheme.titleLarge,
+                  ),
+                  SizedBox(
+                    height: 16.0,
+                  ),
+                  TextFormField(
+                    controller: controller.emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                    ),
+                    validator: (String? value) {
+                      if (value != null && value.isEmpty) {
+                        return 'Informe o seu email';
+                      } else if (!value!.isEmail) {
+                        return 'Informe um email válido';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: controller.passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Senha',
+                    ),
+                    obscureText: true,
+                    validator: (String? value) {
+                      if (value != null && value.isEmpty) {
+                        return 'Informe a senha';
+                      }
+                      return null;
+                    },
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Obx(
+                            () {
+                              if (controller.loading.isTrue) {
+                                return ElevatedButton(
+                                  onPressed: null,
+                                  child: SizedBox(
+                                    width: 10.0,
+                                    height: 10.0,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return ElevatedButton(
+                                onPressed: controller.login,
+                                child: const Text('Entrar'),
+                              );
+                              ;
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    ],
+                  ), //
                 ],
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Get.toNamed(Routes.register),
-                      child: const Text('Criar'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
       ),

@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 
 class OrderModel {
   String hashId;
-  StoreModel store;
   num value;
   num deliveryCost;
   AddressModel? address;
@@ -19,7 +18,6 @@ class OrderModel {
 
   OrderModel({
     required this.hashId,
-    required this.store,
     required this.value,
     required this.deliveryCost,
     required this.address,
@@ -36,10 +34,10 @@ class OrderModel {
   String get enderecoCompleto => address != null
       ? '${address!.street}, n: ${address!.number}, ${address!.neighborhood}'
       : '';
+  String get createAtFormatado => DateFormat("dd/MM/y 'às' HH:mm").format(createdAt);
 
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         hashId: json['hash_id'],
-        store: StoreModel.fromJson(json['estabelecimento']),
         value: double.parse(json['valor']),
         deliveryCost: double.parse(json['custo_entrega']),
         address: json['endereco'] == null

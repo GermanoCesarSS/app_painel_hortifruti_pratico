@@ -12,6 +12,7 @@ class LoginController extends GetxController {
       TextEditingController(text: 'cliente@email.com');
   TextEditingController passwordController =
       TextEditingController(text: '123456');
+  final loading = RxBool(false);
 
   void login() {
     Get.focusScope!.unfocus();
@@ -22,17 +23,21 @@ class LoginController extends GetxController {
       password: passwordController.text,
     );
 
+    loading.value = true;
+
     _authService.login(userLoginRequest).then((value) {
       // if (Get.routing.previous != Routes.checkout) {
       //   Get.offAllNamed(Routes.dashboard,
       //       arguments: DashboardMenuIndex.profile);
       // }
 
-      Get.back();
+      Get.offNamed(Routes.dashboard);
     }, onError: (error) {
       Get.dialog(AlertDialog(
         title: Text(error.toString()),
       ));
-    });
+    }).whenComplete(
+      () => loading.value = false,
+    );
   }
 }

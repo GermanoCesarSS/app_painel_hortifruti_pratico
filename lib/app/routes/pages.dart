@@ -48,11 +48,11 @@ abstract class AppPages {
 class RedirectMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
-    // var storageService = Get.find<StorageService>();
+    var storageService = Get.find<StorageService>();
 
-    // if (storageService.cityId != null || storageService.token != null) {
-    //   return null;
-    // }
-    // return const RouteSettings(name: Routes.selectCity);
+    if (storageService.token != null) {
+      return null;
+    }
+    return const RouteSettings(name: Routes.login);
   }
 }
