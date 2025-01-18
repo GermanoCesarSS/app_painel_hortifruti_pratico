@@ -1,3 +1,4 @@
+import 'package:app_painel_hortifruti_pratico/app/core/utils/tags/nome_tag.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/services/auth/services.service.dart';
 import 'package:app_painel_hortifruti_pratico/app/modules/order_list/repository.dart';
@@ -14,15 +15,15 @@ class OrderListController extends GetxController
 
   @override
   void onInit() {
-    ever(_authService.user, (_) => fetchOrders());
+    ever(_authService.user, (_) => loadOrders());
 
-    fetchOrders();
+    loadOrders();
 
     super.onInit();
   }
 
-  void fetchOrders() {
-    _repository.getOrders().then((data) {
+  Future<void> loadOrders() async{
+   await _repository.getOrders().then((data) {
       var status = data.isEmpty ? RxStatus.empty() : RxStatus.success();
       change(data, status: status);
     }, onError: (error) {
@@ -32,8 +33,10 @@ class OrderListController extends GetxController
 
   void chanceOrder(OrderModel order) {
     orderSelected.value = order.hashId;
+
     Get.find<OrderController>(
-      tag: ':detail',
+      tag: NomeTag().nomeTagOrderDetail,
     ).orderHashId.value = order.hashId;
+    
   }
 }

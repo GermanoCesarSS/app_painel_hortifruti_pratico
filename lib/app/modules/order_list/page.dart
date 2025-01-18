@@ -1,3 +1,4 @@
+import 'package:app_painel_hortifruti_pratico/app/data/models/order.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/modules/order_list/widgets/order_detail/order_detail_widget.dart';
 import 'package:app_painel_hortifruti_pratico/app/modules/order_list/widgets/order_list/order_list_widget.dart';
 import 'package:app_painel_hortifruti_pratico/app/routes/routes.dart';
@@ -18,7 +19,7 @@ class OrderListPage extends GetResponsiveView<OrderListController> {
             flex: 2,
             child: Container(
               constraints: BoxConstraints(maxWidth: 400),
-              child: OrderListWidget(controller.chanceOrder),
+              child: OrderListWidget(onItemSelect: controller.chanceOrder),
             ),
           ),
           Flexible(flex: 3, child: OrderDetailWidget()),
@@ -32,7 +33,7 @@ class OrderListPage extends GetResponsiveView<OrderListController> {
     return Scaffold(
       appBar: AppBar(title: const Text('Meus Pedidos')),
       body: OrderListWidget(
-        (order) =>
+        onItemSelect: (OrderModel order) =>
             Get.toNamed(Routes.order.replaceFirst(':hashId', order.hashId)),
       ),
     );

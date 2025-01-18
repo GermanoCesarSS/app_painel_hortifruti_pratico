@@ -1,5 +1,7 @@
 // coverage:ignore-file
 import 'package:app_painel_hortifruti_pratico/app/data/services/storage/services.service.dart';
+import 'package:app_painel_hortifruti_pratico/app/modules/categpry/binding.dart';
+import 'package:app_painel_hortifruti_pratico/app/modules/categpry/page.dart';
 import 'package:app_painel_hortifruti_pratico/app/modules/dashboard/binding.dart';
 import 'package:app_painel_hortifruti_pratico/app/modules/dashboard/page.dart';
 import 'package:app_painel_hortifruti_pratico/app/modules/login/binding.dart';
@@ -23,9 +25,9 @@ abstract class AppPages {
       middlewares: [RedirectMiddleware()],
     ),
     GetPage(
-      name: Routes.store,
-      page: () => const StorePage(),
-      binding: StoreBinding(),
+      name: Routes.catetory,
+      page: () => const CategoryPage(),
+      binding: CategoryBinding(),
     ),
     GetPage(
       name: Routes.product,

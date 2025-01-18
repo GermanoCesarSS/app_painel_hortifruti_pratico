@@ -9,7 +9,7 @@ class OrderListWidget extends StatelessWidget {
   final OrderListController _controller = Get.find<OrderListController>();
   final ItemSelectedCallback onItemSelect;
 
-  OrderListWidget(this.onItemSelect, {super.key});
+  OrderListWidget({required this.onItemSelect, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +17,14 @@ class OrderListWidget extends StatelessWidget {
       (state) => ListView(
         children: [
           for (var order in state!)
-            ListTile(
-              title: Text('#${order.hashId}'),
-              subtitle: Text(order.createAtFormatado),
-              trailing: Chip(label: Text(order.statusList.last.name)),
-              onTap: () => onItemSelect(order),
+            Obx(
+              () => ListTile(
+                title: Text('#${order.hashId}'),
+                subtitle: Text(order.createAtFormatado),
+                trailing: Chip(label: Text(order.statusList.last.name)),
+                onTap: () => onItemSelect(order),
+                selected: _controller.orderSelected.value == order.hashId,
+              ),
             ),
         ],
       ),

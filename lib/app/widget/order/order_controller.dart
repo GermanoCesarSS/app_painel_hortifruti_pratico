@@ -1,5 +1,7 @@
 import 'package:app_painel_hortifruti_pratico/app/data/models/order.module.dart';
-import 'package:app_painel_hortifruti_pratico/app/modules/order/repository.dart';
+import 'package:app_painel_hortifruti_pratico/app/modules/order_list/controller.dart';
+import 'package:app_painel_hortifruti_pratico/app/widget/order/order_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OrderController extends GetxController with StateMixin<OrderModel> {
@@ -12,14 +14,11 @@ class OrderController extends GetxController with StateMixin<OrderModel> {
   void onInit() {
     String? hashId = Get.parameters['hashId'];
 
-    if (hashId == null) {
-      change(null, status: RxStatus.error("ID do pedido não encontrado."));
-      return;
-    }
-
     ever(orderHashId, (String? hashId) => loadOrder());
-
-    orderHashId.value = hashId;
+    
+    if (hashId != null) {
+      orderHashId.value = hashId;
+    }
 
     super.onInit();
   }
@@ -34,6 +33,25 @@ class OrderController extends GetxController with StateMixin<OrderModel> {
       },
       onError: (error) {
         change(null, status: RxStatus.error(error.toString()));
+      },
+    );
+  }
+
+  Future<void> onSendStatus(int statusId) async {
+    await _repository
+        .postOrderStatus(id: orderHashId.value!, statusId: statusId)
+        .then(
+      (data) async {
+        await loadOrder();
+
+        await Get.find<OrderListController>().loadOrders();
+      },
+      onError: (error) {
+        Get.dialog(
+          AlertDialog(
+            title: Text(error.toString()),
+          ),
+        );
       },
     );
   }

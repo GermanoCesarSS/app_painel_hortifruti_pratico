@@ -45,7 +45,7 @@ class UnauthorizedException extends DioException {
 
   @override
   String toString() {
-    return 'Access denied';
+    return 'Acesso negado';
   }
 }
 

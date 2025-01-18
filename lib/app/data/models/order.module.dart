@@ -2,7 +2,6 @@ import 'package:app_painel_hortifruti_pratico/app/data/models/address.module.dar
 import 'package:app_painel_hortifruti_pratico/app/data/models/order_product.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order_status.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/payment_method.module.dart';
-import 'package:app_painel_hortifruti_pratico/app/data/models/store.module.dart';
 import 'package:intl/intl.dart';
 
 class OrderModel {

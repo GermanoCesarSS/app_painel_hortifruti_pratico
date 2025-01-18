@@ -36,6 +36,7 @@ class AppInterceptors extends Interceptor {
           case 400:
             throw BadRequestException(err.requestOptions);
           case 401:
+          case 403:
             throw UnauthorizedException(err.requestOptions);
           case 404:
             throw NotFoundException(err.requestOptions);

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:app_painel_hortifruti_pratico/app/data/models/address.module.dart';
+import 'package:app_painel_hortifruti_pratico/app/data/models/category.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/city.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order_request.module.dart';
+import 'package:app_painel_hortifruti_pratico/app/data/models/product.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/store.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/user.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/user_address_request.module.dart';
@@ -69,8 +73,7 @@ class Api extends GetxService {
 
   Future<List<StoreModel>> getStores(int cityId) async {
     String nomeFn = 'Future<List<StoreModel>> getStores()';
-    var response = (
-      await _dio.get('cidades/$cityId/estabelecimentos'));
+    var response = (await _dio.get('cidades/$cityId/estabelecimentos'));
 
     List<StoreModel> data = [];
     for (var store in response.data) {
@@ -83,9 +86,7 @@ class Api extends GetxService {
 
   Future<StoreModel> getStore(int id) async {
     String nomeFn = 'Future<StoreModel> getStore(int id) async';
-    var response = (
-      await _dio.get('estabelecimentos/$id')
-    );
+    var response = (await _dio.get('estabelecimentos/$id'));
     return StoreModel.fromJson(response.data);
   }
 
@@ -132,6 +133,25 @@ class Api extends GetxService {
     await _dio.delete('enderecos/$id');
   }
 
+  Future<List<CategoryModel>> getCategories() async {
+    String nomeFn = 'getCategories() async';
+    var response = await _dio.get('estabelecimento/categorias');
+
+    return (response.data as List)
+        .map((orders) => CategoryModel.fromJson(orders))
+        .toList();
+  }
+  
+  
+  Future<List<ProductModel>> getProducts(int categoryId) async {
+    String nomeFn = 'getProducts(int categoryId async';
+    var response = await _dio.get('estabelecimento/produtos', queryParameters: {'categoria_id' : categoryId});
+
+    return (response.data as List)
+        .map((orders) => ProductModel.fromJson(orders))
+        .toList();
+  }
+
   // PEDIDOS
 
   Future<String> postOrder(OrderRequestModel data) async {
@@ -144,6 +164,12 @@ class Api extends GetxService {
     }
 
     return response.data['hash_id'];
+  }
+
+  Future<void> postOrderStatus(String orderHashId, int statusId) async {
+    String nomeFn = 'postOrder() async';
+    var response = await _dio.post('pedidos/$orderHashId/statuses',
+        data: jsonEncode({'status_id': statusId}));
   }
 
   Future<List<OrderModel>> getOrders() async {

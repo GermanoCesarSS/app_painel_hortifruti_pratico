@@ -1,5 +1,4 @@
 import 'package:app_painel_hortifruti_pratico/app/modules/login/controller.dart';
-import 'package:app_painel_hortifruti_pratico/app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -79,7 +78,6 @@ class LoginPage extends GetView<LoginController> {
                                 onPressed: controller.login,
                                 child: const Text('Entrar'),
                               );
-                              ;
                             },
                           ),
                         ),

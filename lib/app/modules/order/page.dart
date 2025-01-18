@@ -12,7 +12,7 @@ class OrderPage extends GetView<OrderController> {
       appBar: AppBar(
         title: const Text('Detalhes do Pedidos'),
       ),
-      body: controller.obx((state) => OrderWidget(state!)),
+      body: controller.obx((state) => OrderWidget(order: state!)),
     );
   }
 

@@ -1,15 +1,9 @@
 abstract class Routes {
   static const dashboard = '/';
-  static const store = '/store/:id';
   static const product = '/product';
-  static const cart = '/cart';
-  static const checkout = '/checkout';
-  static const register = '/register';
   static const login = '/login';
-  static const userAddress = '/user-address';
-  static const userAddressList = '/user-address-list';
   static const order = '/orders/:hashId';
-  static const selectCity = '/select-city';
+  static const catetory = '/catetories/:category_id';
 }
 
 abstract class DashboardMenuIndex {

@@ -2,6 +2,7 @@ import 'package:app_painel_hortifruti_pratico/app/data/models/order.module.dart'
 import 'package:app_painel_hortifruti_pratico/app/data/models/order_product.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/widget/informacao_linha.dart';
 import 'package:app_painel_hortifruti_pratico/app/widget/order/order_controller.dart';
+import 'package:app_painel_hortifruti_pratico/app/widget/order_next_status/order_next_status_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,7 @@ import 'package:intl/intl.dart';
 class OrderWidget extends StatelessWidget {
   final OrderModel order;
   final OrderController _controller;
-  OrderWidget({required this.order, required String tag, super.key})
+  OrderWidget({required this.order, String? tag, super.key})
       : _controller = Get.find<OrderController>(tag: tag);
 
   @override
@@ -69,6 +70,10 @@ class OrderWidget extends StatelessWidget {
                   trailing: Text(NumberFormat.simpleCurrency()
                       .format(orderProduct.product.price)),
                 ),
+              OrderNextStatusWidget(
+                currentStatus: order.statusList.last,
+                onChangeStatus: _controller.onSendStatus,
+              ),
               InformacaoLinha(
                 titulo: 'Custo de entrega',
                 estiloTitulo: Get.textTheme.bodyMedium,

@@ -33,16 +33,6 @@ class UserProfilePage extends GetView<UserProfileController> {
             child: Column(
               spacing: 8.00,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Get.toNamed(Routes.userAddressList),
-                        child: const Text('Meus endereços'),
-                      ),
-                    ),
-                  ],
-                ),
                 Form(
                   key: controller.formKey,
                   child: Column(
