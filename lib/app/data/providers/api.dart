@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app_painel_hortifruti_pratico/app/data/models/address.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/category.module.dart';
+import 'package:app_painel_hortifruti_pratico/app/data/models/category_request.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/city.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order_request.module.dart';
@@ -141,15 +142,21 @@ class Api extends GetxService {
         .map((orders) => CategoryModel.fromJson(orders))
         .toList();
   }
-  
-  
+
   Future<List<ProductModel>> getProducts(int categoryId) async {
     String nomeFn = 'getProducts(int categoryId async';
-    var response = await _dio.get('estabelecimento/produtos', queryParameters: {'categoria_id' : categoryId});
+    var response = await _dio.get('estabelecimento/produtos',
+        queryParameters: {'categoria_id': categoryId});
 
     return (response.data as List)
         .map((orders) => ProductModel.fromJson(orders))
         .toList();
+  }
+
+  Future<CategoryModel> postCategory(CategoryRequestModel data) async {
+    var response =
+        await _dio.post('estabelecimento/categorias', data: jsonEncode(data));
+    return CategoryModel.fromJson(response.data);
   }
 
   // PEDIDOS

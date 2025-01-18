@@ -14,8 +14,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 void main() async {
-  await initDependencies();
   Intl.defaultLocale = 'pt_BR';
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(buildApp());
 }
 

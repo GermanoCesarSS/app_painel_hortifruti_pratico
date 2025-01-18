@@ -1,84 +1,184 @@
 // coverage:ignore-file
 import 'package:app_painel_hortifruti_pratico/app/modules/product/controller.dart';
-import 'package:app_painel_hortifruti_pratico/app/modules/product/widgts/quantity_and_weight/quantity_and_weight_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:transparent_image/transparent_image.dart';
 
-class ProductPage extends GetView<ProductController> {
-  const ProductPage({super.key});
+class ProductPage extends GetResponsiveView<ProductController> {
+  ProductPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var product = controller.product.value;
+  Widget builder() {
     return Scaffold(
-      appBar: AppBar(title: Text(product!.name)),
+      appBar: AppBar(title: Text('Novo Produto')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Column(
           children: [
-            Align(
-              child: Container(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: FadeInImage.memoryNetwork(
-                    imageErrorBuilder: (context, error, stackTrace) =>
-                        const SizedBox(
-                      width: 56.00,
-                      child: Icon(
-                        Icons.apple,
-                        color: Colors.redAccent,
-                        size: 50.00,
+            if (screen.isPhone) ...[
+              _buildForm(),
+              _buildPickAndShowImage(),
+              _buildButtonSubmit(),
+            ] else ...[
+              Center(
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 800.0),
+                  child: IntrinsicHeight(
+                      child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildForm(),
+                            _buildButtonSubmit(),
+                          ],
+                        ),
                       ),
-                    ),
-                    placeholder: kTransparentImage,
-                    image: product.imagem,
-                  ),
+                      SizedBox(width: 16.0),
+                      Flexible(child: _buildPickAndShowImage()),
+                    ],
+                  )),
+                ),
+              )
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+
+  Row _buildButtonSubmit() {
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child:
+                ElevatedButton(onPressed: () {}, child: const Text('Adcionar')),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Form _buildForm() {
+    return Form(
+      child: Column(
+        children: [
+          TextFormField(
+            controller: controller.nameController,
+            decoration: InputDecoration(labelText: 'Nome'),
+            validator: ((String? value) {
+              if (value != null || value!.isEmpty) {
+                return 'Informe o nome';
+              }
+              return null;
+            }),
+          ),
+          TextFormField(
+            controller: controller.descriptionController,
+            decoration: InputDecoration(labelText: 'Descrição'),
+            minLines: 1,
+            maxLength: 3,
+          ),
+          Row(
+            spacing: 16.0,
+            children: [
+              Flexible(
+                child: TextFormField(
+                  controller: controller.priceController,
+                  decoration: InputDecoration(labelText: 'Preço'),
+                  validator: (value) {
+                    if (value != null || value!.isEmpty) {
+                      return 'Informe o preço';
+                    }
+                    return null;
+                  },
                 ),
               ),
-            ),
-            if (product.description != null)
-              Text(
-                product.description!,
-                style: Get.textTheme.titleSmall,
+              SizedBox(
+                width: 150.00,
+                child: DropdownButtonFormField(
+                  decoration: InputDecoration(labelText: 'Preço'),
+                  items: ['UN', 'KG']
+                      .map((String unit) =>
+                          DropdownMenuItem(value: unit, child: Text(unit)))
+                      .toList(),
+                  onChanged: (value) {},
+                ),
               ),
-            Text(
-              NumberFormat.simpleCurrency().format(product.price) +
-                  (product.isKg ? '/KG' : ''),
-              style: Get.textTheme.titleLarge,
+            ],
+          ),
+          Obx(
+            () => DropdownButtonFormField(
+              decoration: InputDecoration(labelText: 'Categoria'),
+              value: controller.categoryId.value,
+              items: controller.categoryList
+                  .map(
+                    (category) => DropdownMenuItem<int>(
+                      value: category.id,
+                      child: Text(category.name),
+                    ),
+                  )
+                  .toList(),
+              validator: (int? value) {
+                if (value == null) {
+                  return 'Selecione uma categoria';
+                }
+                return null;
+              },
+              onChanged: controller.changeCategory,
             ),
-            TextField(
-              controller: controller.observationController,
-              decoration: const InputDecoration(
-                labelText: 'Observação',
-              ),
-              maxLength: 50,
-            ),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                border: Border.all(color: Colors.black12, width: 2.0),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                children: [
-                  Text('Altere ${product.isKg ? 'o peso' : 'a quantidade'}'),
-                  const SizedBox(height: 4.0),
-                  QuantityAndWeightWidget(isKg: product.isKg),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                  onPressed: () => controller.addToCart(),
-                  child: const Text('Adcionar no carrinho')),
-            )
-          ],
+          ),
+          TextButton(
+            onPressed: controller.goToNewCategory,
+            child: Text('Criar uma nova Categoria'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPickAndShowImage() {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Imagem do produto',
+            style: Get.textTheme.bodyMedium,
+          ),
+        ),
+        Obx(() {
+          if (controller.image.value != null &&
+              controller.image.value!.bytes != null) {
+            return _buildProductImage(
+                Image.memory(controller.image.value!.bytes!));
+          }
+          return SizedBox();
+        }),
+        Padding(
+          padding: EdgeInsets.only(
+            top: 8.0,
+            bottom: 16.0,
+          ),
+          child: OutlinedButton(
+            onPressed: controller.pickImage,
+            child: Text('Selecionar uma imagem'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductImage(Widget image) {
+    return Align(
+      child: Container(
+        constraints: BoxConstraints(maxHeight: 250.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: image,
         ),
       ),
     );

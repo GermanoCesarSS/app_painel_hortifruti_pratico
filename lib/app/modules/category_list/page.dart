@@ -12,7 +12,15 @@ class CategoryListPage extends GetResponsiveView<CategoryListController> {
   @override
   Widget desktop() {
     return Scaffold(
-      appBar: AppBar(title: const Text('Meus Produtos')),
+      appBar: AppBar(
+        title: const Text('Meus Produtos'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.toNamed(Routes.product),
+            child: Text('Novo Produto'),
+          ),
+        ],
+      ),
       body: Row(
         children: [
           Flexible(
@@ -33,8 +41,8 @@ class CategoryListPage extends GetResponsiveView<CategoryListController> {
     return Scaffold(
       appBar: AppBar(title: const Text('Meus Pedidos')),
       body: CategoryListWidget(
-        onItemSelect: (CategoryModel catetory) =>
-            Get.toNamed(Routes.catetory.replaceFirst(':category_id', catetory.id.toString())),
+        onItemSelect: (CategoryModel catetory) => Get.toNamed(Routes.catetory
+            .replaceFirst(':category_id', catetory.id.toString())),
       ),
     );
   }
