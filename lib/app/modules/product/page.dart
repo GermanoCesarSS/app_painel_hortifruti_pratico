@@ -54,8 +54,25 @@ class ProductPage extends GetResponsiveView<ProductController> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child:
-                ElevatedButton(onPressed: () {}, child: const Text('Adcionar')),
+            child: Obx(() {
+              if (controller.loading.isTrue) {
+                return const ElevatedButton(
+                  onPressed: null,
+                  child: SizedBox(
+                    width: 18.0,
+                    height: 18.0,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                );
+              }
+
+              return ElevatedButton(
+                onPressed: controller.onAdd,
+                child: const Text('Adcionar'),
+              );
+            }),
           ),
         ),
       ],
@@ -64,6 +81,7 @@ class ProductPage extends GetResponsiveView<ProductController> {
 
   Form _buildForm() {
     return Form(
+      key: controller.formKey,
       child: Column(
         children: [
           TextFormField(
@@ -100,12 +118,13 @@ class ProductPage extends GetResponsiveView<ProductController> {
               SizedBox(
                 width: 150.00,
                 child: DropdownButtonFormField(
+                  value: controller.unitOfMeasure.value,
                   decoration: InputDecoration(labelText: 'Preço'),
                   items: ['UN', 'KG']
                       .map((String unit) =>
                           DropdownMenuItem(value: unit, child: Text(unit)))
                       .toList(),
-                  onChanged: (value) {},
+                  onChanged: controller.changeunitOfMeasure,
                 ),
               ),
             ],

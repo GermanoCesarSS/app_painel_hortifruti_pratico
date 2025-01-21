@@ -7,6 +7,7 @@ import 'package:app_painel_hortifruti_pratico/app/data/models/city.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/order_request.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/product.module.dart';
+import 'package:app_painel_hortifruti_pratico/app/data/models/product_request.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/store.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/user.module.dart';
 import 'package:app_painel_hortifruti_pratico/app/data/models/user_address_request.module.dart';
@@ -143,6 +144,8 @@ class Api extends GetxService {
         .toList();
   }
 
+  // PRODUTOS
+
   Future<List<ProductModel>> getProducts(int categoryId) async {
     String nomeFn = 'getProducts(int categoryId async';
     var response = await _dio.get('estabelecimento/produtos',
@@ -151,6 +154,21 @@ class Api extends GetxService {
     return (response.data as List)
         .map((orders) => ProductModel.fromJson(orders))
         .toList();
+  }
+
+  Future<ProductModel> postProduct(ProductRequestModel data) async {
+    var formData = FormData.fromMap(data.toJson());
+    var imagem = data.imagem;
+
+    if (imagem != null) {
+      formData.files.add(
+        MapEntry('imagem',
+            MultipartFile.fromBytes(imagem.bytes!, filename: imagem.name)),
+      );
+    }
+
+    var response = await _dio.post('estabelecimento/produtos', data: formData);
+    return ProductModel.fromJson(response.data);
   }
 
   Future<CategoryModel> postCategory(CategoryRequestModel data) async {
