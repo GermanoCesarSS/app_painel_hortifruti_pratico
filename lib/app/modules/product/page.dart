@@ -2,6 +2,7 @@
 import 'package:app_painel_hortifruti_pratico/app/modules/product/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ProductPage extends GetResponsiveView<ProductController> {
   ProductPage({super.key});
@@ -9,7 +10,7 @@ class ProductPage extends GetResponsiveView<ProductController> {
   @override
   Widget builder() {
     return Scaffold(
-      appBar: AppBar(title: Text('Novo Produto')),
+      appBar: AppBar(title: Text(controller.title)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Column(
@@ -68,10 +69,17 @@ class ProductPage extends GetResponsiveView<ProductController> {
                 );
               }
 
-              return ElevatedButton(
-                onPressed: controller.onAdd,
-                child: const Text('Adcionar'),
-              );
+              if (controller.editing.isTrue) {
+                return ElevatedButton(
+                  onPressed: controller.onUpdate,
+                  child: const Text('Atualizar'),
+                );
+              } else {
+                return ElevatedButton(
+                  onPressed: controller.onAdd,
+                  child: const Text('Adcionar'),
+                );
+              }
             }),
           ),
         ),
@@ -88,7 +96,7 @@ class ProductPage extends GetResponsiveView<ProductController> {
             controller: controller.nameController,
             decoration: InputDecoration(labelText: 'Nome'),
             validator: ((String? value) {
-              if (value != null || value!.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return 'Informe o nome';
               }
               return null;
@@ -97,8 +105,6 @@ class ProductPage extends GetResponsiveView<ProductController> {
           TextFormField(
             controller: controller.descriptionController,
             decoration: InputDecoration(labelText: 'Descrição'),
-            minLines: 1,
-            maxLength: 3,
           ),
           Row(
             spacing: 16.0,
@@ -108,7 +114,7 @@ class ProductPage extends GetResponsiveView<ProductController> {
                   controller: controller.priceController,
                   decoration: InputDecoration(labelText: 'Preço'),
                   validator: (value) {
-                    if (value != null || value!.isEmpty) {
+                    if (value == null || value.isEmpty) {
                       return 'Informe o preço';
                     }
                     return null;
@@ -174,6 +180,19 @@ class ProductPage extends GetResponsiveView<ProductController> {
               controller.image.value!.bytes != null) {
             return _buildProductImage(
                 Image.memory(controller.image.value!.bytes!));
+          }
+
+          if (controller.currentImage.value?.isNotEmpty ?? false) {
+            return Column(
+              children: [
+                _buildProductImage(
+                  FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: controller.currentImage.value!,
+                  ),
+                ),
+              ],
+            );
           }
           return SizedBox();
         }),

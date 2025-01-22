@@ -30,6 +30,7 @@ class InformacaoLinha extends StatelessWidget {
           Text(
             numero,
             style: estiloNumero ?? Get.textTheme.titleMedium,
+            
           ),
         ],
       ),

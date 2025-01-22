@@ -162,12 +162,30 @@ class Api extends GetxService {
 
     if (imagem != null) {
       formData.files.add(
+        MapEntry(
+          'imagem',
+          MultipartFile.fromBytes(imagem.bytes!, filename: imagem.name),
+        ),
+      );
+    }
+
+    var response = await _dio.post('estabelecimento/produtos', data: formData);
+    return ProductModel.fromJson(response.data);
+  }
+
+  Future<ProductModel> putProduct(ProductRequestModel data) async {
+    var formData = FormData.fromMap(data.toJson());
+    var imagem = data.imagem;
+
+    if (imagem != null) {
+      formData.files.add(
         MapEntry('imagem',
             MultipartFile.fromBytes(imagem.bytes!, filename: imagem.name)),
       );
     }
 
-    var response = await _dio.post('estabelecimento/produtos', data: formData);
+    var response =
+        await _dio.put('estabelecimento/produtos/${data.id}', data: formData);
     return ProductModel.fromJson(response.data);
   }
 

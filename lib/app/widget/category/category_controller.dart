@@ -15,9 +15,11 @@ class CategoryController extends GetxController
     if (Get.currentRoute != '/' && Get.parameters.containsKey('category_id')) {
       categoryId.value = int.parse(Get.parameters['category_id']!);
     }
+    
 
     super.onInit();
   }
+  
 
   Future<void> loadProducts() async {
     int id = categoryId.value!;
